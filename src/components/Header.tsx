@@ -1,48 +1,12 @@
 import styled from "styled-components"
 
-function Header() {
-  return (
-    <Nav>
-      <Logo src="/images/logo.svg" />
-      <NavMenu>
-        <a>
-          <img src="/images/home-icon.svg" alt="" />
-          <span>首頁</span>
-        </a>
-        <a>
-          <img src="/images/search-icon.svg" alt="" />
-          <span>搜尋</span>
-        </a>
-        <a>
-          <img src="/images/watchlist-icon.svg" alt="" />
-          <span>我的片單</span>
-        </a>
-        <a>
-          <img src="/images/original-icon.svg" alt="" />
-          <span>原創</span>
-        </a>
-        <a>
-          <img src="/images/movie-icon.svg" alt="" />
-          <span>電影</span>
-        </a>
-        <a>
-          <img src="/images/series-icon.svg" alt="" />
-          <span>影集</span>
-        </a>
-      </NavMenu>
-      <UserImg src="https://0xzx.com/wp-content/uploads/2021/02/1612816276_405_elon-musk.jpg" />
-    </Nav>
-  )
-}
-
-export default Header
-
 const Nav = styled.div`
   height: 70px;
   background: #090b13;
   display: flex;
   align-items: center;
   padding: 0 36px;
+  overflow-x: hidden;
 `
 const Logo = styled.img`
   width: 80px;
@@ -100,3 +64,40 @@ const UserImg = styled.img`
   border-radius: 50%;
   cursor: pointer;
 `
+
+function Header() {
+  return (
+    <Nav>
+      <Logo src="/images/logo.svg" />
+      <NavMenu>
+        <a>
+          <img src="/images/home-icon.svg" alt="" />
+          <span>首頁</span>
+        </a>
+        <a>
+          <img src="/images/search-icon.svg" alt="" />
+          <span>搜尋</span>
+        </a>
+        <a>
+          <img src="/images/watchlist-icon.svg" alt="" />
+          <span>我的片單</span>
+        </a>
+        <a>
+          <img src="/images/original-icon.svg" alt="" />
+          <span>原創</span>
+        </a>
+        <a>
+          <img src="/images/movie-icon.svg" alt="" />
+          <span>電影</span>
+        </a>
+        <a>
+          <img src="/images/series-icon.svg" alt="" />
+          <span>影集</span>
+        </a>
+      </NavMenu>
+      <UserImg src="https://0xzx.com/wp-content/uploads/2021/02/1612816276_405_elon-musk.jpg" />
+    </Nav>
+  )
+}
+
+export default Header
