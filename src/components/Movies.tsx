@@ -1,5 +1,7 @@
 import styled from "styled-components"
-
+import { selectMovies } from "../features/movie/movieSlice"
+import { useAppSelector } from "../app/hooks"
+import { thumbnailUrl } from "../contents/movie"
 const Container = styled.div`
   h4 {
     font-size: 15px;
@@ -30,34 +32,22 @@ const Wrap = styled.div`
 `
 
 function Movies() {
+  const movies = useAppSelector(selectMovies)
   return (
     <Container>
       <h4>推薦給您</h4>
       <Content>
-        <Wrap>
-          <img
-            src="https://i.ytimg.com/vi/zpz1Ncgx1KQ/maxresdefault.jpg"
-            alt=""
-          />
-        </Wrap>
-        <Wrap>
-          <img
-            src="https://i.ytimg.com/vi/zpz1Ncgx1KQ/maxresdefault.jpg"
-            alt=""
-          />
-        </Wrap>
-        <Wrap>
-          <img
-            src="https://i.ytimg.com/vi/zpz1Ncgx1KQ/maxresdefault.jpg"
-            alt=""
-          />
-        </Wrap>
-        <Wrap>
-          <img
-            src="https://i.ytimg.com/vi/zpz1Ncgx1KQ/maxresdefault.jpg"
-            alt=""
-          />
-        </Wrap>
+        {movies &&
+          movies.TopRated?.map((movie: any) => (
+            <Wrap key={movie.id}>
+              <img
+                src={`${thumbnailUrl}${
+                  movie.backdrop_path || movie.poster_path
+                }`}
+                alt=""
+              />
+            </Wrap>
+          ))}
       </Content>
     </Container>
   )
