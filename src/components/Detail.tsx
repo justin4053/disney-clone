@@ -1,5 +1,10 @@
 import styled from "styled-components"
-import { UserGroupIcon } from "@heroicons/react/solid"
+import { UserGroupIcon, PlayIcon } from "@heroicons/react/solid"
+import { useParams } from "react-router-dom"
+// import { selectMovies } from "../features/movie/movieSlice"
+// import { useAppSelector } from "../app/hooks"
+import { useGetMoviesQuery } from "../services/Services"
+import { thumbnailUrl } from "../contents/movie"
 
 const Container = styled.div`
   min-height: calc(100vh - 70px);
@@ -22,8 +27,8 @@ const Background = styled.div`
   }
 `
 const ImageTitle = styled.div`
-  height: 30vh;
-  min-height: 170px;
+  height: 20vh;
+  min-height: 100px;
   width: 35vw;
   min-width: 200px;
   img {
@@ -32,6 +37,10 @@ const ImageTitle = styled.div`
     object-fit: contain;
   }
 `
+const Title = styled.h1`
+  font-size: 100px;
+`
+
 const Controls = styled.div`
   display: flex;
   align-items: center;
@@ -115,41 +124,43 @@ const Description = styled.div`
 `
 
 function Detail() {
+  const { id } = useParams()
+  const { data, isLoading } = useGetMoviesQuery()
+  const movie = data?.results.find((result: any) => result.id == id)
   return (
     <Container>
-      <Background>
-        <img
-          src="https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/4F39B7E16726ECF419DD7C49E011DD95099AA20A962B0B10AA1881A70661CE45/scale?width=1440&aspectRatio=1.78&format=jpeg"
-          alt=""
-        />
-      </Background>
-      <ImageTitle>
-        <img
-          src="https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/D7AEE1F05D10FC37C873176AAA26F777FC1B71E7A6563F36C6B1B497CAB1CEC2/scale?width=1440&aspectRatio=1.78"
-          alt=""
-        />
-      </ImageTitle>
-      <SubTitle>2019・3小時5分鐘,科幻、奇幻、超級英雄、動作冒險</SubTitle>
-      <Controls>
-        <PlayButton>
-          <img src="images/play-icon-black.png" alt="" />
-          <span>播放</span>
-        </PlayButton>
-        <TrailerButton>
-          <span>預告</span>
-        </TrailerButton>
-        <AddButton>
-          <span>+</span>
-        </AddButton>
-        <GroupWatchButton>
-          <UserGroupIcon />
-        </GroupWatchButton>
-      </Controls>
-      <Description>
-        漫威的「無限」(Infinity)
-        系列史詩般的結局成為全球廣受好評的熱議話題，復仇者聯盟將與宇宙中最強大的反派薩諾斯展開激烈的對決。在毀滅性的事件抹殺了世界上一半的人口，並重挫他們的隊伍之後，剩下的英雄們掙扎著前進。但是他們必須攜手恢復宇宙的秩序與和諧，並把他們愛的人帶回來。由小勞勃道尼、克里斯伊凡、馬克盧法洛、克里斯漢斯沃、史嘉蕾喬韓森、傑瑞米雷納、唐奇鐸、保羅路德、班奈狄克康柏拜區、查德威克鮑斯曼、布麗拉森、湯姆霍蘭、凱倫吉蘭、柔伊莎​達娜和伊凡潔琳莉莉主演的《復仇者聯盟：終局之戰》(Avengers:
-        Endgame)由凱文費奇製作，安東尼羅素和喬羅素執導。路易斯斯波西托、維多利亞阿隆索、邁克爾格里羅、陳貞、強法夫洛、詹姆斯岡恩和史丹李擔任執行製片人，克里斯托弗馬庫斯和史蒂芬麥費利撰寫劇本。某些連續閃光的片段或圖案可能會給光敏感的觀眾造成不適。
-      </Description>
+      {!isLoading && (
+        <>
+          <Background>
+            <img
+              src={`${thumbnailUrl}${movie.backdrop_path || movie.poster_path}`}
+              alt=""
+            />
+          </Background>
+          <ImageTitle></ImageTitle>
+          <Title>{movie?.title || movie?.name}</Title>
+          <SubTitle>
+            {movie?.release_date?.slice(0, 4) || "無上映日期"}
+            ・3小時5分鐘,科幻、奇幻、超級英雄、動作冒險
+          </SubTitle>
+          <Controls>
+            <PlayButton>
+              <img src="/images/play-icon-black.png" alt="" />
+              <span>播放</span>
+            </PlayButton>
+            <TrailerButton>
+              <span>預告</span>
+            </TrailerButton>
+            <AddButton>
+              <span>+</span>
+            </AddButton>
+            <GroupWatchButton>
+              <UserGroupIcon />
+            </GroupWatchButton>
+          </Controls>
+          <Description>{movie.overview}</Description>
+        </>
+      )}
     </Container>
   )
 }

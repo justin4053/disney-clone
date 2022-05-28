@@ -1,7 +1,11 @@
 import styled from "styled-components"
+import { Link } from "react-router-dom"
 import { selectMovies } from "../features/movie/movieSlice"
 import { useAppSelector } from "../app/hooks"
 import { thumbnailUrl } from "../contents/movie"
+import { useGetMoviesQuery } from "../services/Services"
+import { Movie } from "../../typings"
+
 const Container = styled.div`
   h4 {
     font-size: 15px;
@@ -32,24 +36,27 @@ const Wrap = styled.div`
 `
 
 function Movies() {
-  const movies = useAppSelector(selectMovies)
+  // const movies = useAppSelector(selectMovies)
+  const { data, isLoading } = useGetMoviesQuery()
+  const movies = data?.results
   return (
-    <Container>
-      <h4>推薦給您</h4>
-      <Content>
-        {movies &&
-          movies.TopRated?.map((movie: any) => (
-            <Wrap key={movie.id}>
-              <img
-                src={`${thumbnailUrl}${
-                  movie.backdrop_path || movie.poster_path
-                }`}
-                alt=""
-              />
-            </Wrap>
-          ))}
-      </Content>
-    </Container>
+    <>
+      {!isLoading && (
+        <Container>
+          <h4>推薦給您</h4>
+          <Content>
+            {movies &&
+              movies.map((movie: Movie) => (
+                <Wrap key={movie.id}>
+                  <Link to={`/detail/${movie.id}`}>
+                    <img src={`${thumbnailUrl}${movie.poster_path}`} alt="" />
+                  </Link>
+                </Wrap>
+              ))}
+          </Content>
+        </Container>
+      )}
+    </>
   )
 }
 

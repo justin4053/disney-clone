@@ -1,10 +1,12 @@
 import { configureStore,ThunkAction,Action } from '@reduxjs/toolkit';
-import movieReducer from '../features/movie/movieSlice';
+// import movieReducer from '../features/movie/movieSlice';
+import { moviesApi,moviesApiReducer } from '../services/Services'
 
 export const store = configureStore({
   reducer: {
-    movie: movieReducer,
-  },
+    // movie: movieReducer,
+    [moviesApi.reducerPath]: moviesApiReducer
+  },middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(moviesApi.middleware)
 });
 
 export type AppDispatch = typeof store.dispatch;
