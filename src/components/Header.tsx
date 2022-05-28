@@ -1,4 +1,20 @@
 import styled from "styled-components"
+import {
+  auth,
+  provider,
+  signInWithPopup,
+  signOut,
+  onAuthStateChanged
+} from "../firebase"
+import { useNavigate } from "react-router-dom"
+import {
+  selectUserName,
+  selectUserPhoto,
+  setUserLogin,
+  setSignOut
+} from "../features/user/userSlice"
+import { useDispatch, useSelector } from "react-redux"
+import { useEffect } from "react"
 
 const Nav = styled.div`
   height: 70px;
@@ -64,38 +80,109 @@ const UserImg = styled.img`
   border-radius: 50%;
   cursor: pointer;
 `
+const Login = styled.div`
+  border: 1px solid #f9f9f9;
+  padding: 8px 16px;
+  border-radius: 4px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  background-color: rgba(0, 0, 0, 0.6);
+  transition: all 0.2s ease 0s;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #f9f9f9;
+    color: #000;
+    border-color: transparent;
+  }
+`
+const LoginContainer = styled.div`
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+`
 
 function Header() {
+  const dispatch = useDispatch()
+  let navigate = useNavigate()
+  const userName = useSelector(selectUserName)
+  const userPhoto = useSelector(selectUserPhoto)
+
+  useEffect(() => {
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        dispatch(
+          setUserLogin({
+            name: user.displayName,
+            email: user.email,
+            photo: user.photoURL
+          })
+        )
+        navigate("/")
+      }
+    })
+  }, [])
+
+  const userSignIn = () => {
+    signInWithPopup(auth, provider).then((result) => {
+      let user = result.user
+      dispatch(
+        setUserLogin({
+          name: user.displayName,
+          email: user.email,
+          photo: user.photoURL
+        })
+      )
+      navigate("/")
+    })
+  }
+  const userSignOut = () => {
+    signOut(auth).then(() => {
+      dispatch(setSignOut())
+      navigate("/login")
+    })
+  }
   return (
     <Nav>
       <Logo src="/images/logo.svg" />
-      <NavMenu>
-        <a>
-          <img src="/images/home-icon.svg" alt="" />
-          <span>首頁</span>
-        </a>
-        <a>
-          <img src="/images/search-icon.svg" alt="" />
-          <span>搜尋</span>
-        </a>
-        <a>
-          <img src="/images/watchlist-icon.svg" alt="" />
-          <span>我的片單</span>
-        </a>
-        <a>
-          <img src="/images/original-icon.svg" alt="" />
-          <span>原創</span>
-        </a>
-        <a>
-          <img src="/images/movie-icon.svg" alt="" />
-          <span>電影</span>
-        </a>
-        <a>
-          <img src="/images/series-icon.svg" alt="" />
-          <span>影集</span>
-        </a>
-      </NavMenu>
-      <UserImg src="https://0xzx.com/wp-content/uploads/2021/02/1612816276_405_elon-musk.jpg" />
+      {!userName ? (
+        <LoginContainer>
+          <Login onClick={userSignIn}>Login</Login>
+        </LoginContainer>
+      ) : (
+        <>
+          <NavMenu>
+            <a>
+              <img src="/images/home-icon.svg" alt="" />
+              <span>首頁</span>
+            </a>
+            <a>
+              <img src="/images/search-icon.svg" alt="" />
+              <span>搜尋</span>
+            </a>
+            <a>
+              <img src="/images/watchlist-icon.svg" alt="" />
+              <span>我的片單</span>
+            </a>
+            <a>
+              <img src="/images/original-icon.svg" alt="" />
+              <span>原創</span>
+            </a>
+            <a>
+              <img src="/images/movie-icon.svg" alt="" />
+              <span>電影</span>
+            </a>
+            <a>
+              <img src="/images/series-icon.svg" alt="" />
+              <span>影集</span>
+            </a>
+          </NavMenu>
+          <UserImg
+            onClick={userSignOut}
+            src="https://0xzx.com/wp-content/uploads/2021/02/1612816276_405_elon-musk.jpg"
+          />
+        </>
+      )}
     </Nav>
   )
 }
